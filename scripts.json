@@ -1,32 +1,32 @@
 [
-    {
-        "id": 1,
-        "text": "God says: Do not worry about tomorrow, for tomorrow will worry about itself. Trust in my timing and my plan for your life.",
-        "category": "god",
-        "used": false
-    },
-    {
-        "id": 2,
-        "text": "When you feel like you are drowning in life, remember that your creator is the master of the seas. He will never let you sink.",
-        "category": "god",
-        "used": false
-    },
-    {
-        "id": 3,
-        "text": "Faith is not about everything turning out okay. Faith is about being okay no matter how things turn out, because God is with you.",
-        "category": "god",
-        "used": false
-    },
-    {
-        "id": 4,
-        "text": "Your current situation is not your final destination. God has a greater purpose for your journey. Keep moving forward.",
-        "category": "god",
-        "used": false
-    },
-    {
-        "id": 5,
-        "text": "The same God who created the stars and the mountains thought the world needed one of you. You are loved beyond measure.",
-        "category": "god",
-        "used": false
-    }
+  {
+    "id": 1,
+    "text": "God says: Do not worry about tomorrow, for tomorrow will worry about itself. Trust in my timing and my plan for your life.",
+    "category": "god",
+    "used": true
+  },
+  {
+    "id": 2,
+    "text": "When you feel like you are drowning in life, remember that your creator is the master of the seas. He will never let you sink.",
+    "category": "god",
+    "used": false
+  },
+  {
+    "id": 3,
+    "text": "Faith is not about everything turning out okay. Faith is about being okay no matter how things turn out, because God is with you.",
+    "category": "god",
+    "used": false
+  },
+  {
+    "id": 4,
+    "text": "Your current situation is not your final destination. God has a greater purpose for your journey. Keep moving forward.",
+    "category": "god",
+    "used": false
+  },
+  {
+    "id": 5,
+    "text": "The same God who created the stars and the mountains thought the world needed one of you. You are loved beyond measure.",
+    "category": "god",
+    "used": false
+  }
 ]

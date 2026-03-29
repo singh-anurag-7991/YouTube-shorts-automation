@@ -8,10 +8,16 @@ import (
 	"youtube-shorts-automation/internal/image"
 	"youtube-shorts-automation/internal/script"
 	"youtube-shorts-automation/internal/tts"
+	"youtube-shorts-automation/internal/video"
 )
 
 func main() {
-	fmt.Println("🚀 YouTube Shorts Automation - Image & Audio Preparation")
+	fmt.Println("🚀 YouTube Shorts Automation - Integrated Pipeline")
+
+	if !video.CheckFFmpeg() {
+		log.Println("❌ Error: FFmpeg is not installed. Please run 'brew install ffmpeg' first.")
+		return
+	}
 
 	cfg := config.LoadConfig()
 	if cfg.PixabayAPIKey == "" {
@@ -42,7 +48,7 @@ func main() {
 
 	log.Printf("⏳ Generating audio for script %d...", next.ID)
 	if err := ttsClient.Synthesize(next.Text, audioPath); err != nil {
-		log.Printf("❌ TTS failed: %v", err)
+		log.Printf("⚠️  TTS skipped (Check credentials): %v", err)
 	}
 
 	// 3. Image Download
@@ -50,11 +56,20 @@ func main() {
 	imagePath := fmt.Sprintf("temp/image_%d.jpg", next.ID)
 
 	log.Printf("⏳ Fetching image for query 'god'...")
-	downloadedPath, err := imgClient.SearchAndDownload("god", imagePath)
+	_, err = imgClient.SearchAndDownload("god", imagePath)
 	if err != nil {
-		log.Printf("❌ Image download failed: %v", err)
+		log.Printf("⚠️  Image download skipped: %v", err)
+	}
+
+	// 4. Video Composition
+	composer := video.NewComposer(cfg.WatermarkText)
+	outputPath := fmt.Sprintf("temp/short_%d.mp4", next.ID)
+
+	log.Printf("⏳ Composing video...")
+	if err := composer.CreateShort(imagePath, audioPath, outputPath); err != nil {
+		log.Printf("⚠️  Composition failed: %v", err)
 	} else {
-		fmt.Printf("✅ Image downloaded: %s\n", downloadedPath)
+		fmt.Printf("✅ Video created: %s\n", outputPath)
 	}
 
 	// Simulate marking as used
@@ -62,5 +77,5 @@ func main() {
 		log.Fatalf("❌ Failed to mark script as used: %v", err)
 	}
 
-	fmt.Println("✅ Progress: Script marked as used, files in temp/")
+	fmt.Println("✅ Pipeline iteration complete")
 }
