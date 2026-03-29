@@ -34,7 +34,7 @@ func (c *Client) Synthesize(text string, outputPath string) error {
 		Voice: &texttospeechpb.VoiceSelectionParams{
 			LanguageCode: "en-US",
 			Name:         "en-US-Wavenet-D",
-			SsmlGender:   texttospeechpb.SsmlGender_MALE,
+			SsmlGender:   texttospeechpb.SsmlVoiceGender_MALE,
 		},
 		AudioConfig: &texttospeechpb.AudioConfig{
 			AudioEncoding: texttospeechpb.AudioEncoding_MP3,

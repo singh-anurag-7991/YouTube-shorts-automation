@@ -5,16 +5,22 @@ import (
 	"log"
 	"os"
 	"youtube-shorts-automation/internal/config"
+	"youtube-shorts-automation/internal/image"
 	"youtube-shorts-automation/internal/script"
 	"youtube-shorts-automation/internal/tts"
 )
 
 func main() {
-	fmt.Println("🚀 YouTube Shorts Automation - Audio Generation")
+	fmt.Println("🚀 YouTube Shorts Automation - Image & Audio Preparation")
 
 	cfg := config.LoadConfig()
 	if cfg.PixabayAPIKey == "" {
 		log.Println("⚠️  Warning: PIXABAY_API_KEY is not set in .env")
+	}
+
+	// Ensure temp directory exists
+	if _, err := os.Stat("temp"); os.IsNotExist(err) {
+		os.Mkdir("temp", 0755)
 	}
 
 	// 1. Script Selection
@@ -34,16 +40,21 @@ func main() {
 	ttsClient := tts.NewClient()
 	audioPath := fmt.Sprintf("temp/audio_%d.mp3", next.ID)
 
-	// Ensure temp directory exists
-	if _, err := os.Stat("temp"); os.IsNotExist(err) {
-		os.Mkdir("temp", 0755)
-	}
-
 	log.Printf("⏳ Generating audio for script %d...", next.ID)
 	if err := ttsClient.Synthesize(next.Text, audioPath); err != nil {
-		log.Printf("❌ TTS failed (Check GOOGLE_APPLICATION_CREDENTIALS): %v", err)
+		log.Printf("❌ TTS failed: %v", err)
+	}
+
+	// 3. Image Download
+	imgClient := image.NewClient(cfg.PixabayAPIKey)
+	imagePath := fmt.Sprintf("temp/image_%d.jpg", next.ID)
+
+	log.Printf("⏳ Fetching image for query 'god'...")
+	downloadedPath, err := imgClient.SearchAndDownload("god", imagePath)
+	if err != nil {
+		log.Printf("❌ Image download failed: %v", err)
 	} else {
-		fmt.Printf("✅ Audio generated: %s\n", audioPath)
+		fmt.Printf("✅ Image downloaded: %s\n", downloadedPath)
 	}
 
 	// Simulate marking as used
@@ -51,5 +62,5 @@ func main() {
 		log.Fatalf("❌ Failed to mark script as used: %v", err)
 	}
 
-	fmt.Println("✅ Script marked as used successfully")
+	fmt.Println("✅ Progress: Script marked as used, files in temp/")
 }
